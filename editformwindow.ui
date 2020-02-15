@@ -32,7 +32,7 @@
      </font>
     </property>
     <property name="text">
-     <string>เพิ่มรายการ</string>
+     <string>แก้ไขรายการ</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
