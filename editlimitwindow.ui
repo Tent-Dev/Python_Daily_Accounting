@@ -14,245 +14,218 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTableView" name="summary_table">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>120</y>
+      <x>150</x>
+      <y>10</y>
       <width>501</width>
-      <height>381</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Name_label">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>40</y>
-      <width>91</width>
-      <height>21</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
+      <pointsize>28</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>$Name</string>
+     <string>แก้ไขวงเงิน</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="income_label">
+   <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>40</y>
-      <width>91</width>
-      <height>21</height>
+      <x>330</x>
+      <y>120</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
+      <pointsize>14</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>$Income</string>
+     <string>วงเงินปัจจุบัน</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="spend_label">
-    <property name="geometry">
-     <rect>
-      <x>650</x>
-      <y>40</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>$Spend</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="currentLimit_label">
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>40</y>
-      <width>91</width>
-      <height>21</height>
+      <y>150</y>
+      <width>161</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
+      <pointsize>28</pointsize>
       <weight>75</weight>
       <bold>true</bold>
-      <strikeout>false</strikeout>
-      <stylestrategy>PreferDefault</stylestrategy>
      </font>
     </property>
     <property name="text">
-     <string>รายรับ :</string>
+     <string>N/A</string>
     </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="wordWrap">
-     <bool>false</bool>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>40</y>
-      <width>91</width>
-      <height>21</height>
+      <x>450</x>
+      <y>150</y>
+      <width>51</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
+      <pointsize>28</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>รายจ่าย :</string>
+     <string>฿</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>280</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Sukhumvit Set</family>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>แก้ไขวงเงิน</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>80</y>
-      <width>711</width>
-      <height>16</height>
+      <x>230</x>
+      <y>240</y>
+      <width>341</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="addLedger_btn">
+   <widget class="QLineEdit" name="limit_value_field">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>150</y>
+      <x>260</x>
+      <y>330</y>
       <width>181</width>
       <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
+      <pointsize>28</pointsize>
      </font>
-    </property>
-    <property name="text">
-     <string>เพิ่มรายการ</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="editLedger_btn">
+   <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>220</y>
-      <width>181</width>
-      <height>41</height>
+      <x>450</x>
+      <y>310</y>
+      <width>51</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
+      <pointsize>28</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>แก้ไขรายการ</string>
+     <string>฿</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="analyze_btn">
+   <widget class="QPushButton" name="to_summary_btn">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>360</y>
-      <width>181</width>
+      <x>660</x>
+      <y>510</y>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
+      <pointsize>12</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
     <property name="text">
-     <string>วิเคราะห์</string>
+     <string>กลับไปหน้าวงเงิน</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="seeAll_btn">
+   <widget class="QPushButton" name="saveLimit_btn">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>430</y>
-      <width>181</width>
+      <x>330</x>
+      <y>400</y>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>ดูรายการทั้งหมด</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="editLimit_btn">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>290</y>
-      <width>181</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Sukhumvit Set</family>
-      <pointsize>18</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>ควบคุมวงเงิน</string>
+     <string>ยืนยันแก้ไขวงเงิน</string>
     </property>
    </widget>
   </widget>
