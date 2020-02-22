@@ -9,9 +9,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from my_service.alert import errorWarShow, sucessShow, errorCriShow
+from my_service.check_register import checkRegis, insertRegister_to_Db, check_inputNormal
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+
+class RegisterUi(object):
+    def setupRegisterUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -142,6 +145,11 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.Regis_Register_btn.clicked.connect(self.regisprocess)
+        self.Regis_Reset_btn.clicked.connect(self.reset_form_btn)
+        self.thiswindow = MainWindow
+        #self.prewindow = prewindow
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -156,12 +164,70 @@ class Ui_MainWindow(object):
         self.Regis_Reset_btn.setText(_translate("MainWindow", "Reset"))
         self.label_7.setText(_translate("MainWindow", "โปรแกรมบันทึกรายรับรายจ่าย"))
 
+    def reset_form_btn(self):
+        self.Fname_field.clear()
+        self.Lname_field.clear()
+        self.Regis_Username_field.clear()
+        self.Regis_Password_field.clear()
+        self.Regis_ConPassword_field.clear()
+        self.Date_field.date()
+
+    def linktologin(self):
+        self.thiswindow.hide()
+        #self.prewindow.show()
+
+    def regisprocess(self):
+        Fname = self.Fname_field.text()
+        Lname = self.Lname_field.text()
+        username = self.Regis_Username_field.text()
+        password = self.Regis_Password_field.text()
+        confirm_password = self.Regis_ConPassword_field.text()
+        birthday = self.Date_field.text()
+        list_check = [Fname,Lname,username,password,confirm_password,birthday] #List for send to check null value function
+
+        if check_inputNormal(list_check):
+            if(password == confirm_password):
+                if checkRegis(username):
+                    errorWarShow(self,'Error!!!', 'Duplicate Data\nPlease input other username to register')
+                    self.Regis_Username_field.clear()
+                    self.Regis_Password_field.clear()
+                    self.Regis_ConPassword_field.clear()
+                else:
+                    datatoinput = {"username": username,
+                                   "password": password,
+                                   "Fname": Fname,
+                                   "Lname": Lname,
+                                   "birthday": birthday,
+                                   }
+                    if insertRegister_to_Db(datatoinput):
+                        sucessShow(self,'Sucessful!!!', 'User has been created')
+                        self.Fname_field.clear()
+                        self.Lname_field.clear()
+                        self.Regis_Username_field.clear()
+                        self.Regis_Password_field.clear()
+                        self.Regis_ConPassword_field.clear()
+                        self.Date_field.clear()
+                    else:
+                        errorCriShow(self,'Error!!!', 'User Create Fail')
+                        self.Fname_field.clear()
+                        self.Lname_field.clear()
+                        self.Regis_Username_field.clear()
+                        self.Regis_Password_field.clear()
+                        self.Regis_ConPassword_field.clear()
+                        self.Date_field.clear()
+            else:
+                errorWarShow(self,'Error!!!', 'Password not same Re-Password')
+                self.Regis_Password_field.clear()
+                self.Regis_ConPassword_field.clear()
+        else:
+            errorWarShow(self,'Error!!!', 'Please fill all information')
+
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    RegisFormuser = QtWidgets.QMainWindow()
+    ui = RegisterUi()
+    ui.setupRegisterUi(RegisFormuser)
+    RegisFormuser.show()
     sys.exit(app.exec_())
