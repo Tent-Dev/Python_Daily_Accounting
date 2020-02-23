@@ -8,10 +8,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QDate
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+class AddLedgerUi(object):
+    def AddLedgerSetupUi(self, MainWindow, user_data):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -42,6 +43,7 @@ class Ui_MainWindow(object):
         font.setPointSize(14)
         self.date_field.setFont(font)
         self.date_field.setObjectName("date_field")
+        self.date_field.setDateTime(QtCore.QDateTime.currentDateTime()) #Set current date
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(20, 150, 101, 20))
         font = QtGui.QFont()
@@ -174,6 +176,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -202,7 +205,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = AddLedgerUi()
+    ui.AddLedgerSetupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

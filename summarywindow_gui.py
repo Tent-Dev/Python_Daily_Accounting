@@ -8,10 +8,13 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QSizePolicy
+
+from addledgerwindow_gui import AddLedgerUi
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+class SummaryUi(object):
+    def setupSummaryUi(self, MainWindow, user_data):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -20,7 +23,7 @@ class Ui_MainWindow(object):
         self.summary_table.setGeometry(QtCore.QRect(30, 120, 501, 381))
         self.summary_table.setObjectName("summary_table")
         self.Name_label = QtWidgets.QLabel(self.centralwidget)
-        self.Name_label.setGeometry(QtCore.QRect(40, 40, 91, 21))
+        self.Name_label.setGeometry(QtCore.QRect(40, 40, 200, 21))
         font = QtGui.QFont()
         font.setFamily("Sukhumvit Set")
         font.setPointSize(18)
@@ -130,6 +133,15 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.user_data = user_data
+
+        #setText area
+        self.Name_label.setText('{} {}'.format(user_data[2],user_data[3]))
+
+        #btn area
+        self.addLedger_btn.clicked.connect(self.linktoaddLedger)
+
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -144,12 +156,18 @@ class Ui_MainWindow(object):
         self.seeAll_btn.setText(_translate("MainWindow", "ดูรายการทั้งหมด"))
         self.editLimit_btn.setText(_translate("MainWindow", "ควบคุมวงเงิน"))
 
+    def linktoaddLedger(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = AddLedgerUi()
+        self.ui.AddLedgerSetupUi(self.window, self.user_data)
+        self.window.show()
+
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = SummaryUi()
+    ui.setupSummaryUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

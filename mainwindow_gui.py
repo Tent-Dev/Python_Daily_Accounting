@@ -9,9 +9,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from my_service.alert import errorWarShow
+from my_service.alert import errorWarShow, errorCriShow, sucessShow
+from my_service.check_login import checkLogin
 from my_service.check_register import check_inputNormal
 from registerwindow_gui import RegisterUi
+from summarywindow_gui import SummaryUi
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -95,25 +98,32 @@ class Ui_MainWindow(object):
         self.ui = RegisterUi()
         self.ui.setupRegisterUi(self.window)
         self.window.show()
-        # self.thiswindow.hide()
 
     def linktologin(self): #Function To รindex page
         username = self.Username_field.text()
         password = self.Password_field.text()
         list_check = [username, password]  # List for send to check null value function
-        if check_inputNormal(list_check):
-            print("ok")
+
+        if check_inputNormal(list_check): #Function check login with database (and First. Check null value in textfield)
+            print("Check login null value ==> ok")
+            print("Verify login data ==> wait...")
+            datatoinput = {"username": username, "password": password}
+            dataLogin = checkLogin(datatoinput)
+            if dataLogin[0] == "FAIL":
+                errorCriShow(self,'Login Fail!!!','Please check your username or password again')
+                self.Username_field.clear()
+                self.Password_field.clear()
+            elif dataLogin[0] == "PASS":
+                sucessShow(self,'Login success','----Welcome----\n{} {}'.format(dataLogin[2],dataLogin[3]))
+                self.window = QtWidgets.QMainWindow()
+                self.ui = SummaryUi()
+                self.ui.setupSummaryUi(self.window,dataLogin)
+                self.window.show()
+                self.thiswindow.hide()
         else:
             errorWarShow(self,'Error!!!', 'Please fill Username or Password')
             self.Username_field.clear()
             self.Password_field.clear()
-        # self.Username_field.clear()
-        # self.Password_field.clear()
-        # self.window = QtWidgets.QMainWindow()
-        # self.ui = RegisterUi()
-        # self.ui.setupRegisterUi(self.window)
-        # self.window.show()
-        # self.thiswindow.hide()
 
 if __name__ == "__main__":
     import sys
