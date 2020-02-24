@@ -10,6 +10,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QDate
 
+from my_service.check_addledger import checkAddLedger
+
 
 class AddLedgerUi(object):
     def AddLedgerSetupUi(self, MainWindow, user_data):
@@ -176,6 +178,13 @@ class AddLedgerUi(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.user_data = user_data
+        self.income_field.setText("0")
+        self.spend_field.setText("0")
+
+        self.add_btn.clicked.connect(self.linktoAdd_Process)
+        self.reset_btn.clicked.connect(self.reset_form_btn)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -200,6 +209,43 @@ class AddLedgerUi(object):
         self.type_field.setItemText(5, _translate("MainWindow", "รายรับทั่วไป"))
         self.type_field.setItemText(6, _translate("MainWindow", "รายรับเงินเดือน"))
 
+    def linktoAdd_Process(self):
+        print("adding new data ==> start...")
+
+        date_Transaction = self.date_field.text()
+        desc_Transaction = self.desc_field.toPlainText()
+        income_Transaction = self.income_field.toPlainText()
+        income_Transaction_float = float(income_Transaction)
+        spend_Transaction = self.spend_field.toPlainText()
+        spend_Transaction_float = float(spend_Transaction)
+        type_Transaction = self.type_field.currentText()
+
+        datatoinput = {"date": date_Transaction,
+                       "desc": desc_Transaction,
+                       "income": income_Transaction_float,
+                       "spend": spend_Transaction_float,
+                       "type": type_Transaction
+                       }
+        #Check null value and set to 0 in income and spend
+        # if datatoinput['income'] == "":
+        #     datatoinput.update({'income': 0})
+        # if datatoinput['spend'] == "":
+        #     datatoinput.update({'spend': 0})
+
+        dataLogin = checkAddLedger(datatoinput, self.user_data)
+        if(dataLogin):
+            self.desc_field.clear()
+            self.income_field.setText("0")
+            self.spend_field.setText("0")
+            self.type_field.currentText()
+            self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
+
+    def reset_form_btn(self):
+        self.desc_field.clear()
+        self.income_field.setText("0")
+        self.spend_field.setText("0")
+        self.type_field.currentText()
+        self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
 
 if __name__ == "__main__":
     import sys
