@@ -9,9 +9,14 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+import datetime
+from my_service.alert import sucessShow
+from my_service.check_limitValue import checkAddlimitValue, query_limitValue
+from my_service.check_register import check_inputNormal
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+
+class editLimit_Ui(object):
+    def editLimit_setupUi(self, MainWindow, user_data):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -117,6 +122,13 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.user_data = user_data
+
+        # btn area
+        self.saveLimit_btn.clicked.connect(self.linktosavelimit)
+
+        query_limitValue(user_data)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -129,12 +141,26 @@ class Ui_MainWindow(object):
         self.to_summary_btn.setText(_translate("MainWindow", "กลับไปหน้าวงเงิน"))
         self.saveLimit_btn.setText(_translate("MainWindow", "ยืนยันแก้ไขวงเงิน"))
 
+    def linktosavelimit(self):
+        print("Save limit value ==> start...")
+        limit_value = self.limit_value_field.text()
+        limit_value_float = float(limit_value)
+        list_check = [limit_value_float]
+        if check_inputNormal(list_check):
+            today = datetime.date.today().strftime('%Y-%m-%d')
+
+            datatoinput = {'limit_value': limit_value_float,
+                           'date_create': today
+                           }
+            if checkAddlimitValue(datatoinput, self.user_data):
+                sucessShow(self,'add limit value success','add limit value success!')
+
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = editLimit_Ui()
+    ui.editLimit_setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QSizePolicy
 
 from addledgerwindow_gui import AddLedgerUi
+from editlimitwindow_gui import editLimit_Ui
 
 
 class SummaryUi(object):
@@ -140,6 +141,7 @@ class SummaryUi(object):
 
         #btn area
         self.addLedger_btn.clicked.connect(self.linktoaddLedger)
+        self.editLimit_btn.clicked.connect(self.linktoeditlimit)
 
 
     def retranslateUi(self, MainWindow):
@@ -160,6 +162,12 @@ class SummaryUi(object):
         self.window = QtWidgets.QMainWindow()
         self.ui = AddLedgerUi()
         self.ui.AddLedgerSetupUi(self.window, self.user_data)
+        self.window.show()
+
+    def linktoeditlimit(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = editLimit_Ui()
+        self.ui.editLimit_setupUi(self.window, self.user_data)
         self.window.show()
 
 
