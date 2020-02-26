@@ -126,8 +126,11 @@ class editLimit_Ui(object):
 
         # btn area
         self.saveLimit_btn.clicked.connect(self.linktosavelimit)
+        query_result = query_limitValue(user_data)
+        print("query ==> {}".format(query_result))
+        if query_result[0] == "PASS":
+            self.currentLimit_label.setText(str(query_result[1]))
 
-        query_limitValue(user_data)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -154,6 +157,9 @@ class editLimit_Ui(object):
                            }
             if checkAddlimitValue(datatoinput, self.user_data):
                 sucessShow(self,'add limit value success','add limit value success!')
+                query_result = query_limitValue(self.user_data)
+                if query_result[0] == "PASS":
+                    self.currentLimit_label.setText(str(query_result[1]))
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QSizePolicy
 
 from addledgerwindow_gui import AddLedgerUi
 from editlimitwindow_gui import editLimit_Ui
+from my_service.check_login import query_data
 
 
 class SummaryUi(object):
@@ -135,6 +136,13 @@ class SummaryUi(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.user_data = user_data
+
+        #query
+        user_query_data = query_data(user_data)
+        print(user_query_data)
+        print(type(user_query_data))
+        self.income_label.setText(str(user_query_data['income_sum']))
+        self.spend_label.setText(str(user_query_data['spend_sum']))
 
         #setText area
         self.Name_label.setText('{} {}'.format(user_data[2],user_data[3]))
