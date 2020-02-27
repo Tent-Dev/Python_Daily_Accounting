@@ -19,9 +19,11 @@ def insertRegister_to_Db(datainput):
     return (status)
 
 def check_inputNormal(input):
+    print("Check null value ==> wait...")
     status = False
     for key,i in enumerate(input): #If have null value ==> False
         if i != "":
+            print("Check null value in Index [{}] ==> ok".format(key))
             status = True
         else:
             status = False

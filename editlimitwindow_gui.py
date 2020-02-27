@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import datetime
-from my_service.alert import sucessShow
+from my_service.alert import sucessShow, errorWarShow, errorCriShow
 from my_service.check_limitValue import checkAddlimitValue, query_limitValue
 from my_service.check_register import check_inputNormal
 
@@ -147,9 +147,10 @@ class editLimit_Ui(object):
     def linktosavelimit(self):
         print("Save limit value ==> start...")
         limit_value = self.limit_value_field.text()
-        limit_value_float = float(limit_value)
-        list_check = [limit_value_float]
+        list_check = [limit_value]
+        print(list_check)
         if check_inputNormal(list_check):
+            limit_value_float = float(limit_value)
             today = datetime.date.today().strftime('%Y-%m-%d')
 
             datatoinput = {'limit_value': limit_value_float,
@@ -160,7 +161,13 @@ class editLimit_Ui(object):
                 query_result = query_limitValue(self.user_data)
                 if query_result[0] == "PASS":
                     self.currentLimit_label.setText(str(query_result[1]))
-
+                else:
+                    errorCriShow(self, 'Error!!!', 'Cannot add data')
+                    self.limit_value_field.clear()
+        else:
+            print("")
+            errorWarShow(self,'Warning!!!', 'Please fill Limit value')
+            self.limit_value_field.clear()
 
 if __name__ == "__main__":
     import sys

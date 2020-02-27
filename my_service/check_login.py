@@ -11,6 +11,7 @@ def checkLogin(datainput):
             datalogin.append(data['Fname'])
             datalogin.append(data['Lname'])
         print('Info ==> {}'.format(datalogin))
+        print('-'*30)
     else:
         datalogin.append("FAIL")
     return (datalogin)
@@ -32,6 +33,8 @@ def query_data(user_data):
             spend_sum = spend_sum + transaction['spend']
         print("Sum income ==> {} Bath.".format(income_sum))
         print("Sum spend ==> {} Bath.".format(spend_sum))
+        print("load user data ==> success")
+        print('-' * 30)
 
         data_transaction = {'income_sum': income_sum, 'spend_sum':spend_sum}
 

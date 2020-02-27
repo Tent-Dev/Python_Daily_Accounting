@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QSizePolicy
 
 from addledgerwindow_gui import AddLedgerUi
+from analyzewindow_gui import Analyze_UI
 from editlimitwindow_gui import editLimit_Ui
 from my_service.check_login import query_data
 
@@ -135,12 +136,13 @@ class SummaryUi(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.income_label.setStyleSheet('color: green')
+        self.spend_label.setStyleSheet('color: red')
+
         self.user_data = user_data
 
         #query
         user_query_data = query_data(user_data)
-        print(user_query_data)
-        print(type(user_query_data))
         self.income_label.setText(str(user_query_data['income_sum']))
         self.spend_label.setText(str(user_query_data['spend_sum']))
 
@@ -150,6 +152,7 @@ class SummaryUi(object):
         #btn area
         self.addLedger_btn.clicked.connect(self.linktoaddLedger)
         self.editLimit_btn.clicked.connect(self.linktoeditlimit)
+        self.analyze_btn.clicked.connect(self.linktoanalyze)
 
 
     def retranslateUi(self, MainWindow):
@@ -176,6 +179,12 @@ class SummaryUi(object):
         self.window = QtWidgets.QMainWindow()
         self.ui = editLimit_Ui()
         self.ui.editLimit_setupUi(self.window, self.user_data)
+        self.window.show()
+
+    def linktoanalyze(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Analyze_UI()
+        self.ui.Analyze_setupUI(self.window, self.user_data)
         self.window.show()
 
 
