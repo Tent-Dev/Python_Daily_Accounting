@@ -97,6 +97,8 @@ def query_analyze(user_data):
     else:
         data_analyze.append("FAIL")
         print("load limit value ==> Error")
+
+    print("-"*30)
     return (data_analyze)
 
 
@@ -116,24 +118,19 @@ def findDataByDay(user_data, datestart, dateend):
     spend_sum = 0
     db = connect_db.connectMongoDB()
     if db.userlist.count_documents({'username': user_data[1]}) == 1:
-        print("Start date : {} | End date : {}".format(datestart,dateend))
-        # get_data = db.userlist.find({'username': user_data[1],
-        #                              'date_transaction.date':{ '$gte':datestart, '$lte':dateend }
-        #                              }
-        #                             )
+
         get_data = db.userlist.find({'username': user_data[1]})
 
         for data in get_data:
             find_analyze_data = data
 
-        datestart_c = datetime.strptime(datestart, '%d-%b-%Y')
-        dateend_c = datetime.strptime(dateend, '%d-%b-%Y')
+        datestart_c = datetime.datetime.strptime(datestart, '%d-%b-%Y')
+        dateend_c = datetime.datetime.strptime(dateend, '%d-%b-%Y')
         print("{} - {}".format(datestart_c,dateend_c))
         if 'date_transaction' in find_analyze_data:
             for transaction_analyze in find_analyze_data['date_transaction']:
-                print(transaction_analyze['date'])
-                data_date_c = datetime.strptime(transaction_analyze['date'], '%d-%b-%Y')
-                if dateend_c <= data_date_c >= datestart_c:
+                data_date_c = datetime.datetime.strptime(transaction_analyze['date'], '%d-%b-%Y')
+                if datestart_c <= data_date_c <= dateend_c:
                     income_sum = income_sum + transaction_analyze['income']
                     spend_sum = spend_sum + transaction_analyze['spend']
 
@@ -207,5 +204,5 @@ def findDataByDay(user_data, datestart, dateend):
     else:
         data_analyze.append("FAIL")
         print("load limit value ==> Error")
-
+    print("-" * 30)
     return (data_analyze)

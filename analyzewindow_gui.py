@@ -388,6 +388,7 @@ class Analyze_UI(object):
 
         # btn area
         self.find_btn.clicked.connect(self.findByDate)
+        self.all_btn.clicked.connect(self.findAll)
 
         self.income_pay_label.setText("{} ฿".format(str(user_query_data['income_sum'])))
         self.sum_pay_label.setText("{} ฿".format(str(user_query_data['spend_sum'])))
@@ -486,6 +487,64 @@ class Analyze_UI(object):
         end_date = self.endDate_field.text()
 
         user_query_data = findDataByDay(self.user_data,start_date,end_date)
+        self.income_pay_label.setText("{} ฿".format(str(user_query_data['income_sum'])))
+        self.sum_pay_label.setText("{} ฿".format(str(user_query_data['spend_sum'])))
+        self.normal_income_label.setText("{} ฿".format(user_query_data['normal_income']))
+        self.salary_income_label.setText("{} ฿".format(user_query_data['salary_income']))
+        self.normal_spend_label.setText("{} ฿".format(user_query_data['normal_spend']))
+        self.food_spend_label.setText("{} ฿".format(user_query_data['food_spend']))
+        self.transport_spend_label.setText("{} ฿".format(user_query_data['transport_spend']))
+        self.online_spend_label.setText("{} ฿".format(user_query_data['online_spend']))
+        self.essential_spend_label.setText("{} ฿".format(user_query_data['essential_spend']))
+
+        self.normal_income_pt_label.setText("{} %".format(user_query_data['normal_income_pt']))
+        self.salary_income_pt_label.setText("{} %".format(user_query_data['salary_income_pt']))
+        self.normal_spend_pt_label.setText("{} %".format(user_query_data['normal_spend_pt']))
+        self.food_spend_pt_label.setText("{} %".format(user_query_data['food_spend_pt']))
+        self.transport_spend_pt_label.setText("{} %".format(user_query_data['transport_spend_pt']))
+        self.online_spend_pt_label.setText("{} %".format(user_query_data['online_spend_pt']))
+        self.essential_spend_pt_label.setText("{} %".format(user_query_data['essential_spend_pt']))
+
+        if 50 < user_query_data['normal_spend_pt'] < 70:
+            self.normal_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['normal_spend_pt'] >= 70:
+            self.normal_spend_pt_label.setStyleSheet('color: red')
+        else:
+            self.normal_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['food_spend_pt'] < 70:
+            self.food_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['food_spend_pt'] >= 70:
+            self.food_spend_pt_label.setStyleSheet('color: red')
+        else:
+            self.food_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['transport_spend_pt'] < 70:
+            self.transport_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['transport_spend_pt'] >= 70:
+            self.transport_spend_pt_label.setStyleSheet('color: red')
+        else:
+            self.transport_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['online_spend_pt'] < 70:
+            self.online_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['online_spend_pt'] >= 70:
+            self.online_spend_pt_label.setStyleSheet('color: red')
+        else:
+            self.online_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['essential_spend_pt'] < 70:
+            self.essential_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['essential_spend_pt'] >= 70:
+            self.essential_spend_pt_label.setStyleSheet('color: red')
+        else:
+            self.essential_spend_pt_label.setStyleSheet('color: green')
+
+    def findAll(self):
+        self.startDate_field.setDate(QtCore.QDate(2020, 1, 1))
+        self.endDate_field.setDateTime(QtCore.QDateTime.currentDateTime())
+
+        user_query_data = query_analyze(self.user_data)
         self.income_pay_label.setText("{} ฿".format(str(user_query_data['income_sum'])))
         self.sum_pay_label.setText("{} ฿".format(str(user_query_data['spend_sum'])))
         self.normal_income_label.setText("{} ฿".format(user_query_data['normal_income']))
