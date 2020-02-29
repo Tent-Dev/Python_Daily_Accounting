@@ -27,14 +27,16 @@ def query_data(user_data):
 
         for data in get_data:
             transaction_data = data
-
-        for transaction in transaction_data['date_transaction']:
-            income_sum = income_sum+transaction['income']
-            spend_sum = spend_sum + transaction['spend']
-        print("Sum income ==> {} Bath.".format(income_sum))
-        print("Sum spend ==> {} Bath.".format(spend_sum))
-        print("load user data ==> success")
-        print('-' * 30)
+        if 'date_transaction' not in transaction_data:
+            print("This user not have transaction data.")
+        else:
+            for transaction in transaction_data['date_transaction']:
+                income_sum = income_sum+transaction['income']
+                spend_sum = spend_sum + transaction['spend']
+            print("Sum income ==> {} Bath.".format(income_sum))
+            print("Sum spend ==> {} Bath.".format(spend_sum))
+            print("load user data ==> success")
+            print('-' * 30)
 
         data_transaction = {'income_sum': income_sum, 'spend_sum':spend_sum}
 

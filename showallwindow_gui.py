@@ -10,14 +10,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+class ShowAll_UI(object):
+    def ShowAll_setupUi(self, MainWindow, user_data):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(330, 110, 51, 20))
+        self.label_3.setGeometry(QtCore.QRect(280, 110, 51, 20))
         font = QtGui.QFont()
         font.setFamily("Sukhumvit Set")
         font.setPointSize(14)
@@ -36,18 +36,18 @@ class Ui_MainWindow(object):
         self.label_2.setFont(font)
         self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
-        self.date_field = QtWidgets.QDateEdit(self.centralwidget)
-        self.date_field.setGeometry(QtCore.QRect(90, 100, 221, 41))
+        self.startDate_field = QtWidgets.QDateEdit(self.centralwidget)
+        self.startDate_field.setGeometry(QtCore.QRect(90, 100, 181, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.date_field.setFont(font)
-        self.date_field.setObjectName("date_field")
-        self.date_field_2 = QtWidgets.QDateEdit(self.centralwidget)
-        self.date_field_2.setGeometry(QtCore.QRect(400, 100, 221, 41))
+        self.startDate_field.setFont(font)
+        self.startDate_field.setObjectName("startDate_field")
+        self.endstartDate_field = QtWidgets.QDateEdit(self.centralwidget)
+        self.endstartDate_field.setGeometry(QtCore.QRect(340, 100, 181, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.date_field_2.setFont(font)
-        self.date_field_2.setObjectName("date_field_2")
+        self.endstartDate_field.setFont(font)
+        self.endstartDate_field.setObjectName("endstartDate_field")
         self.all_btn = QtWidgets.QPushButton(self.centralwidget)
         self.all_btn.setGeometry(QtCore.QRect(640, 100, 131, 41))
         font = QtGui.QFont()
@@ -79,9 +79,18 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.to_summary_btn.setFont(font)
         self.to_summary_btn.setObjectName("to_summary_btn")
+        self.find_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.find_btn.setGeometry(QtCore.QRect(540, 100, 81, 41))
+        font = QtGui.QFont()
+        font.setFamily("Sukhumvit Set")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.find_btn.setFont(font)
+        self.find_btn.setObjectName("find_btn")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -91,23 +100,16 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.endstartDate_field.setDateTime(QtCore.QDateTime.currentDateTime())
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_3.setText(_translate("MainWindow", "ถึง"))
         self.label_2.setText(_translate("MainWindow", "วันที่ :"))
-        self.date_field.setDisplayFormat(_translate("MainWindow", "dd-MMM-yyyy"))
-        self.date_field_2.setDisplayFormat(_translate("MainWindow", "dd-MMM-yyyy"))
+        self.startDate_field.setDisplayFormat(_translate("MainWindow", "dd-MMM-yyyy"))
+        self.endstartDate_field.setDisplayFormat(_translate("MainWindow", "dd-MMM-yyyy"))
         self.all_btn.setText(_translate("MainWindow", "ทั้งหมด"))
         self.label.setText(_translate("MainWindow", "รายการทั้งหมด"))
         self.to_summary_btn.setText(_translate("MainWindow", "กลับไปหน้าหลัก"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        self.find_btn.setText(_translate("MainWindow", "ค้นหา"))

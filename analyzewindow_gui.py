@@ -402,16 +402,40 @@ class Analyze_UI(object):
         self.online_spend_pt_label.setText("{} %".format(user_query_data['online_spend_pt']))
         self.essential_spend_pt_label.setText("{} %".format(user_query_data['essential_spend_pt']))
 
-        if user_query_data['normal_spend_pt'] >50:
-            self.normal_spend_label.setStyleSheet('color: red')
-        if user_query_data['food_spend_pt'] >50:
+        if 50 < user_query_data['normal_spend_pt'] < 70:
+            self.normal_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['normal_spend_pt'] >= 70:
+            self.normal_spend_pt_label.setStyleSheet('color: red')
+        else:
+            self.normal_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['food_spend_pt'] < 70:
+            self.food_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['food_spend_pt'] >= 70:
             self.food_spend_pt_label.setStyleSheet('color: red')
-        if user_query_data['transport_spend_pt'] >50:
+        else:
+            self.food_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['transport_spend_pt'] < 70:
+            self.transport_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['transport_spend_pt'] >= 70:
             self.transport_spend_pt_label.setStyleSheet('color: red')
-        if user_query_data['online_spend_pt'] >50:
+        else:
+            self.transport_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['online_spend_pt'] < 70:
+            self.online_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['online_spend_pt'] >= 70:
             self.online_spend_pt_label.setStyleSheet('color: red')
-        if user_query_data['essential_spend_pt'] >50:
+        else:
+            self.online_spend_pt_label.setStyleSheet('color: green')
+
+        if 50 < user_query_data['essential_spend_pt'] < 70:
+            self.essential_spend_pt_label.setStyleSheet('color: orange')
+        elif user_query_data['essential_spend_pt'] >= 70:
             self.essential_spend_pt_label.setStyleSheet('color: red')
+        else:
+            self.essential_spend_pt_label.setStyleSheet('color: green')
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

@@ -10,8 +10,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+class Edit_Ui(object):
+    def Edit_setupUi(self, MainWindow, user_data):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -63,9 +63,18 @@ class Ui_MainWindow(object):
         self.query_table = QtWidgets.QTableView(self.centralwidget)
         self.query_table.setGeometry(QtCore.QRect(140, 160, 521, 331))
         self.query_table.setObjectName("query_table")
+        self.find_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.find_btn.setGeometry(QtCore.QRect(440, 90, 91, 41))
+        font = QtGui.QFont()
+        font.setFamily("Sukhumvit Set")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.find_btn.setFont(font)
+        self.find_btn.setObjectName("find_btn")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -74,6 +83,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -83,13 +93,4 @@ class Ui_MainWindow(object):
         self.date_field.setDisplayFormat(_translate("MainWindow", "dd-MMM-yyyy"))
         self.label_2.setText(_translate("MainWindow", "วันที่ :"))
         self.to_summary_btn_2.setText(_translate("MainWindow", "กลับไปหน้าหลัก"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        self.find_btn.setText(_translate("MainWindow", "ค้นหา"))

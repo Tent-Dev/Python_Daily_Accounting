@@ -22,10 +22,14 @@ def query_limitValue(user_data):
         get_data = db.userlist.find({'username': user_data[1]})
 
         for data in get_data:
-            all_limitValue = data['limit_value_temp']
+            all_limitValue = data
 
-        temp_value = all_limitValue[-1]
-        data_limitValue.append(temp_value['limit_value'])
+        if 'limit_value_temp' not in all_limitValue:
+            print("This user not have limit value data.")
+            data_limitValue.append(0)
+        else:
+            temp_value = all_limitValue['limit_value_temp'][-1]
+            data_limitValue.append(temp_value['limit_value'])
 
         print('Info ==> {}'.format(data_limitValue))
         print("load limit value ==> Success")

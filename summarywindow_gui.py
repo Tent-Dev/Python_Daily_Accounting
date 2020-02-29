@@ -13,7 +13,9 @@ from PyQt5.QtWidgets import QSizePolicy
 from addledgerwindow_gui import AddLedgerUi
 from analyzewindow_gui import Analyze_UI
 from editlimitwindow_gui import editLimit_Ui
+from editwindow_gui import Edit_Ui
 from my_service.check_login import query_data
+from showallwindow_gui import ShowAll_UI
 
 
 class SummaryUi(object):
@@ -153,6 +155,8 @@ class SummaryUi(object):
         self.addLedger_btn.clicked.connect(self.linktoaddLedger)
         self.editLimit_btn.clicked.connect(self.linktoeditlimit)
         self.analyze_btn.clicked.connect(self.linktoanalyze)
+        self.seeAll_btn.clicked.connect(self.linktoshowall)
+        self.editLedger_btn.clicked.connect(self.linktoedit)
 
 
     def retranslateUi(self, MainWindow):
@@ -185,6 +189,18 @@ class SummaryUi(object):
         self.window = QtWidgets.QMainWindow()
         self.ui = Analyze_UI()
         self.ui.Analyze_setupUI(self.window, self.user_data)
+        self.window.show()
+
+    def linktoshowall(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = ShowAll_UI()
+        self.ui.ShowAll_setupUi(self.window, self.user_data)
+        self.window.show()
+
+    def linktoedit(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Edit_Ui()
+        self.ui.Edit_setupUi(self.window, self.user_data)
         self.window.show()
 
 

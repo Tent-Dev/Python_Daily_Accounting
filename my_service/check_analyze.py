@@ -21,25 +21,27 @@ def query_analyze(user_data):
         for data in get_data:
             save_analyze_data = data
 
-        for transaction_analyze in save_analyze_data['date_transaction']:
-            income_sum = income_sum + transaction_analyze['income']
-            spend_sum = spend_sum + transaction_analyze['spend']
+        if 'date_transaction' in save_analyze_data:
+            for transaction_analyze in save_analyze_data['date_transaction']:
+                income_sum = income_sum + transaction_analyze['income']
+                spend_sum = spend_sum + transaction_analyze['spend']
 
-            if transaction_analyze['type'] == "ค่าอาหาร":
-                food_spend = food_spend+transaction_analyze['spend']
-            elif transaction_analyze['type'] == "ค่าเดินทาง":
-                transport_spend = transport_spend+transaction_analyze['spend']
-            elif transaction_analyze['type'] == "ค่าใช้จ่ายทั่วไป":
-                normal_spend = normal_spend+transaction_analyze['spend']
-            elif transaction_analyze['type'] == "ค่าใช้จ่ายออนไลน์":
-                online_spend = online_spend+transaction_analyze['spend']
-            elif transaction_analyze['type'] == "ค่าใช้จ่ายของใช้ที่จำเป็น":
-                essential_spend = essential_spend+transaction_analyze['spend']
-            elif transaction_analyze['type'] == "รายรับทั่วไป":
-                normal_income = normal_income+transaction_analyze['income']
-            elif transaction_analyze['type'] == "รายรับเงินเดือน":
-                salary_income = salary_income+transaction_analyze['income']
-
+                if transaction_analyze['type'] == "ค่าอาหาร":
+                    food_spend = food_spend+transaction_analyze['spend']
+                elif transaction_analyze['type'] == "ค่าเดินทาง":
+                    transport_spend = transport_spend+transaction_analyze['spend']
+                elif transaction_analyze['type'] == "ค่าใช้จ่ายทั่วไป":
+                    normal_spend = normal_spend+transaction_analyze['spend']
+                elif transaction_analyze['type'] == "ค่าใช้จ่ายออนไลน์":
+                    online_spend = online_spend+transaction_analyze['spend']
+                elif transaction_analyze['type'] == "ค่าใช้จ่ายของใช้ที่จำเป็น":
+                    essential_spend = essential_spend+transaction_analyze['spend']
+                elif transaction_analyze['type'] == "รายรับทั่วไป":
+                    normal_income = normal_income+transaction_analyze['income']
+                elif transaction_analyze['type'] == "รายรับเงินเดือน":
+                    salary_income = salary_income+transaction_analyze['income']
+        else:
+            print("This user not have transaction.")
         print("load data for analyze ==> Calculate Percent...")
         if spend_sum == 0:
             normal_pt_spend = 0
