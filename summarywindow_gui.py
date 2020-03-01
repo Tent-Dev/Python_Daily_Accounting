@@ -7,14 +7,14 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QSizePolicy
+from PyQt5 import QtCore, QtGui, QtWidgets, Qt
+from PyQt5.QtWidgets import QSizePolicy, QTableWidgetItem, QTableWidget, QApplication
 
 from addledgerwindow_gui import AddLedgerUi
 from analyzewindow_gui import Analyze_UI
 from editlimitwindow_gui import editLimit_Ui
 from editwindow_gui import Edit_Ui
-from my_service.check_login import query_data
+from my_service.check_login import query_data, query_table
 from showallwindow_gui import ShowAll_UI
 
 
@@ -24,7 +24,7 @@ class SummaryUi(object):
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.summary_table = QtWidgets.QTableView(self.centralwidget)
+        self.summary_table = QtWidgets.QTableWidget(self.centralwidget)
         self.summary_table.setGeometry(QtCore.QRect(30, 120, 501, 381))
         self.summary_table.setObjectName("summary_table")
         self.Name_label = QtWidgets.QLabel(self.centralwidget)
@@ -141,12 +141,36 @@ class SummaryUi(object):
         self.income_label.setStyleSheet('color: green')
         self.spend_label.setStyleSheet('color: red')
 
+        self.summary_table.setColumnCount(5)
+        # self.summary_table.setBackground(QtGui.QColor(255, 0, 0))
+
+        date_col = QtWidgets.QTableWidgetItem('Date')
+        date_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.summary_table.setHorizontalHeaderItem(0, date_col)
+
+        desc_col = QtWidgets.QTableWidgetItem('Description')
+        desc_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.summary_table.setHorizontalHeaderItem(1, desc_col)
+
+        income_col = QtWidgets.QTableWidgetItem('Income')
+        income_col.setBackground(QtGui.QColor(0, 255, 0))
+        self.summary_table.setHorizontalHeaderItem(2, income_col)
+
+        spend_col = QtWidgets.QTableWidgetItem('Spend')
+        spend_col.setBackground(QtGui.QColor(255, 0, 0))
+        self.summary_table.setHorizontalHeaderItem(3, spend_col)
+
+        type_col = QtWidgets.QTableWidgetItem('Type')
+        type_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.summary_table.setHorizontalHeaderItem(4, type_col)
+
         self.user_data = user_data
 
         #query
         user_query_data = query_data(user_data)
         self.income_label.setText(str(user_query_data['income_sum']))
         self.spend_label.setText(str(user_query_data['spend_sum']))
+        self.loadTable()
 
         #setText area
         self.Name_label.setText('{} {}'.format(user_data[2],user_data[3]))
@@ -157,7 +181,6 @@ class SummaryUi(object):
         self.analyze_btn.clicked.connect(self.linktoanalyze)
         self.seeAll_btn.clicked.connect(self.linktoshowall)
         self.editLedger_btn.clicked.connect(self.linktoedit)
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -203,6 +226,26 @@ class SummaryUi(object):
         self.ui.Edit_setupUi(self.window, self.user_data)
         self.window.show()
 
+    def loadTable(self):
+        all_data_table = query_table(self.user_data)
+        print("Prepare to show data on table ==> wait...")
+        for row_number,row_data_table in enumerate(all_data_table):
+            self.summary_table.insertRow(row_number)
+            self.summary_table.setItem(row_number, 0, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['date']))))
+            self.summary_table.setItem(row_number, 1, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['desc']))))
+            self.summary_table.setItem(row_number, 2, QtWidgets.QTableWidgetItem(str("{} ฿".format(row_data_table['income']))))
+            self.summary_table.setItem(row_number, 3, QtWidgets.QTableWidgetItem(str("{} ฿".format(row_data_table['spend']))))
+            self.summary_table.setItem(row_number, 4, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['type']))))
+            self.summary_table.item(row_number, 2).setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            self.summary_table.item(row_number, 3).setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            if row_data_table['income'] > 0:
+                self.summary_table.item(row_number, 2).setBackground(QtGui.QColor(0, 232, 148))
+            if row_data_table['spend'] > 0:
+                self.summary_table.item(row_number, 3).setBackground(QtGui.QColor(255, 150, 142))
+
+        self.summary_table.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers) #set Read only Table
+        print("Prepare to show data on table ==> success")
+        print('-'*30)
 
 if __name__ == "__main__":
     import sys

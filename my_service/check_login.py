@@ -45,3 +45,25 @@ def query_data(user_data):
         data_transaction.append("FAIL")
         print("load limit value ==> Error")
     return (data_transaction)
+
+def query_table(user_data):
+    print("Load Table ==> wait...")
+    data_table = []
+    db = connect_db.connectMongoDB()
+    if db.userlist.count_documents({'username': user_data[1]}) == 1:
+        get_data = db.userlist.find({'username': user_data[1]})
+
+        for data in get_data:
+            transaction_data = data
+        if 'date_transaction' not in transaction_data:
+            print("This user not have transaction data.")
+        else:
+            for transaction in transaction_data['date_transaction']:
+                data_table.append(transaction)
+            print(data_table)
+            print("Load Table ==> success")
+
+    else:
+        data_table.append("FAIL")
+        print("Load Table ==> Error")
+    return (data_table)

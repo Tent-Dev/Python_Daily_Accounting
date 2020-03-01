@@ -555,13 +555,13 @@ class Analyze_UI(object):
         self.online_spend_label.setText("{} ฿".format(user_query_data['online_spend']))
         self.essential_spend_label.setText("{} ฿".format(user_query_data['essential_spend']))
 
-        self.normal_income_pt_label.setText("{} %".format(user_query_data['normal_income_pt']))
-        self.salary_income_pt_label.setText("{} %".format(user_query_data['salary_income_pt']))
-        self.normal_spend_pt_label.setText("{} %".format(user_query_data['normal_spend_pt']))
-        self.food_spend_pt_label.setText("{} %".format(user_query_data['food_spend_pt']))
-        self.transport_spend_pt_label.setText("{} %".format(user_query_data['transport_spend_pt']))
-        self.online_spend_pt_label.setText("{} %".format(user_query_data['online_spend_pt']))
-        self.essential_spend_pt_label.setText("{} %".format(user_query_data['essential_spend_pt']))
+        self.normal_income_pt_label.setText("{:.2f} %".format(user_query_data['normal_income_pt']))
+        self.salary_income_pt_label.setText("{:.2f} %".format(user_query_data['salary_income_pt']))
+        self.normal_spend_pt_label.setText("{:.2f} %".format(user_query_data['normal_spend_pt']))
+        self.food_spend_pt_label.setText("{:.2f} %".format(user_query_data['food_spend_pt']))
+        self.transport_spend_pt_label.setText("{:.2f} %".format(user_query_data['transport_spend_pt']))
+        self.online_spend_pt_label.setText("{:.2f} %".format(user_query_data['online_spend_pt']))
+        self.essential_spend_pt_label.setText("{:.2f} %".format(user_query_data['essential_spend_pt']))
 
         if 50 < user_query_data['normal_spend_pt'] < 70:
             self.normal_spend_pt_label.setStyleSheet('color: orange')

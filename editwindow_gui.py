@@ -9,6 +9,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from my_service.check_editledger import query_table
+
 
 class Edit_Ui(object):
     def Edit_setupUi(self, MainWindow, user_data):
@@ -60,8 +62,8 @@ class Edit_Ui(object):
         font.setWeight(50)
         self.to_summary_btn_2.setFont(font)
         self.to_summary_btn_2.setObjectName("to_summary_btn_2")
-        self.query_table = QtWidgets.QTableView(self.centralwidget)
-        self.query_table.setGeometry(QtCore.QRect(140, 160, 521, 331))
+        self.query_table = QtWidgets.QTableWidget(self.centralwidget)
+        self.query_table.setGeometry(QtCore.QRect(30, 160, 731, 331))
         self.query_table.setObjectName("query_table")
         self.find_btn = QtWidgets.QPushButton(self.centralwidget)
         self.find_btn.setGeometry(QtCore.QRect(440, 90, 91, 41))
@@ -85,6 +87,43 @@ class Edit_Ui(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
 
+        self.query_table.setColumnCount(7)
+        # self.query_table.setBackground(QtGui.QColor(255, 0, 0))
+
+        date_col = QtWidgets.QTableWidgetItem('Date')
+        date_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.query_table.setHorizontalHeaderItem(0, date_col)
+
+        desc_col = QtWidgets.QTableWidgetItem('Description')
+        desc_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.query_table.setHorizontalHeaderItem(1, desc_col)
+
+        income_col = QtWidgets.QTableWidgetItem('Income')
+        income_col.setBackground(QtGui.QColor(0, 255, 0))
+        self.query_table.setHorizontalHeaderItem(2, income_col)
+
+        spend_col = QtWidgets.QTableWidgetItem('Spend')
+        spend_col.setBackground(QtGui.QColor(255, 0, 0))
+        self.query_table.setHorizontalHeaderItem(3, spend_col)
+
+        type_col = QtWidgets.QTableWidgetItem('Type')
+        type_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.query_table.setHorizontalHeaderItem(4, type_col)
+
+        edit_col = QtWidgets.QTableWidgetItem('Action')
+        edit_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.query_table.setHorizontalHeaderItem(5, edit_col)
+
+        delete_col = QtWidgets.QTableWidgetItem('Delete')
+        delete_col.setBackground(QtGui.QColor(255, 222, 191))
+        self.query_table.setHorizontalHeaderItem(6, delete_col)
+        
+        self.user_data = user_data
+
+        self.loadTable()
+
+        self.find_btn.clicked.connect(self.loadTable)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -94,3 +133,32 @@ class Edit_Ui(object):
         self.label_2.setText(_translate("MainWindow", "วันที่ :"))
         self.to_summary_btn_2.setText(_translate("MainWindow", "กลับไปหน้าหลัก"))
         self.find_btn.setText(_translate("MainWindow", "ค้นหา"))
+        
+    def loadTable(self):
+        all_data_table = query_table(self.user_data,self.date_field.text())
+        print("Prepare to show data on table ==> wait...")
+        for row_number,row_data_table in enumerate(all_data_table):
+            self.query_table.insertRow(row_number)
+            self.query_table.setItem(row_number, 0, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['date']))))
+            self.query_table.setItem(row_number, 1, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['desc']))))
+            self.query_table.setItem(row_number, 2, QtWidgets.QTableWidgetItem(str("{} ฿".format(row_data_table['income']))))
+            self.query_table.setItem(row_number, 3, QtWidgets.QTableWidgetItem(str("{} ฿".format(row_data_table['spend']))))
+            self.query_table.setItem(row_number, 4, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['type']))))
+            self.btn_edit = QtWidgets.QPushButton('Edit')
+            # self.btn_edit.clicked.connect(self.handleButtonClicked)
+            self.query_table.setCellWidget(row_number, 5, self.btn_edit)
+
+            self.btn_delete = QtWidgets.QPushButton('Delete')
+            # self.btn_edit.clicked.connect(self.handleButtonClicked)
+            self.query_table.setCellWidget(row_number, 6, self.btn_delete)
+
+            self.query_table.item(row_number, 2).setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            self.query_table.item(row_number, 3).setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            if row_data_table['income'] > 0:
+                self.query_table.item(row_number, 2).setBackground(QtGui.QColor(0, 232, 148))
+            if row_data_table['spend'] > 0:
+                self.query_table.item(row_number, 3).setBackground(QtGui.QColor(255, 150, 142))
+
+        self.query_table.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers) #set Read only Table
+        print("Prepare to show data on table ==> success")
+        print('-' * 30)
