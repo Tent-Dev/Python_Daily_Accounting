@@ -9,7 +9,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from editformwindow_gui import EditForm_Ui
 from my_service.check_editledger import query_table
+
+from functools import partial
 
 
 class Edit_Ui(object):
@@ -145,7 +148,7 @@ class Edit_Ui(object):
             self.query_table.setItem(row_number, 3, QtWidgets.QTableWidgetItem(str("{} ฿".format(row_data_table['spend']))))
             self.query_table.setItem(row_number, 4, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['type']))))
             self.btn_edit = QtWidgets.QPushButton('Edit')
-            # self.btn_edit.clicked.connect(self.handleButtonClicked)
+            self.btn_edit.clicked.connect(partial(self.linktoEditForm, row_data_table))
             self.query_table.setCellWidget(row_number, 5, self.btn_edit)
 
             self.btn_delete = QtWidgets.QPushButton('Delete')
@@ -162,3 +165,10 @@ class Edit_Ui(object):
         self.query_table.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers) #set Read only Table
         print("Prepare to show data on table ==> success")
         print('-' * 30)
+
+    def linktoEditForm(self, row_data_table):
+        print(row_data_table)
+        self.window = QtWidgets.QMainWindow()
+        self.ui = EditForm_Ui()
+        self.ui.EditForm_setupUi(self.window, self.user_data, row_data_table)
+        self.window.show()

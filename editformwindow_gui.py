@@ -9,9 +9,11 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from my_service.check_editledger import checkEditLedger
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+
+class EditForm_Ui(object):
+    def EditForm_setupUi(self, MainWindow, user_data, row_data_table):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -174,6 +176,17 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.user_data = user_data
+        self.old_data = row_data_table
+
+        self.add_btn.clicked.connect(self.linktoEdit_Process)
+
+        self.date_field.setDateTime(QtCore.QDateTime.fromString(row_data_table['date'], 'dd-MMM-yyyy'))
+        self.desc_field.setPlainText(row_data_table['desc'])
+        self.income_field.setText(str(row_data_table['income']))
+        self.spend_field.setText(str(row_data_table['spend']))
+        self.type_field.setCurrentText(row_data_table['type'])
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -197,12 +210,37 @@ class Ui_MainWindow(object):
         self.type_field.setItemText(5, _translate("MainWindow", "รายรับทั่วไป"))
         self.type_field.setItemText(6, _translate("MainWindow", "รายรับเงินเดือน"))
 
+    def linktoEdit_Process(self):
+        print("Editing data ==> start...")
+
+        date_Transaction = self.date_field.text()
+        desc_Transaction = self.desc_field.toPlainText()
+        income_Transaction = self.income_field.toPlainText()
+        income_Transaction_float = float(income_Transaction)
+        spend_Transaction = self.spend_field.toPlainText()
+        spend_Transaction_float = float(spend_Transaction)
+        type_Transaction = self.type_field.currentText()
+
+        datatoinput = {"date": date_Transaction,
+                       "desc": desc_Transaction,
+                       "income": income_Transaction_float,
+                       "spend": spend_Transaction_float,
+                       "type": type_Transaction
+                       }
+
+        dataLogin = checkEditLedger(datatoinput, self.user_data, self.old_data)
+        if (dataLogin):
+            self.desc_field.clear()
+            self.income_field.setText("0")
+            self.spend_field.setText("0")
+            self.type_field.currentText()
+            self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = EditForm_Ui()
+    ui.EditForm_setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
