@@ -1,4 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+
+from my_service.check_editledger import checkDeleteLedger
+
 
 def errorWarShow(self, title, message):
     WarBox = QtWidgets.QMessageBox()
@@ -24,4 +28,14 @@ def errorCriShow(self, title, message):
     CriBox.setWindowTitle(title)
     CriBox.setText(message)
     CriBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    CriBox.exec_()
+
+def questionDialog(self, title, message, id):
+    CriBox = QtWidgets.QMessageBox()
+    CriBox.setIcon(QtWidgets.QMessageBox.Question)
+    CriBox.setWindowTitle(title)
+    CriBox.setText("{}\n{}".format(message, id))
+    CriBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+    CriBox.accepted.connect(lambda: checkDeleteLedger(id))
+
     CriBox.exec_()

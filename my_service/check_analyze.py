@@ -18,33 +18,28 @@ def query_analyze(user_data):
     income_sum = 0
     spend_sum = 0
     db = connect_db.connectMongoDB()
-    if db.userlist.count_documents({'username': user_data[1]}) == 1:
-        get_data = db.userlist.find({'username': user_data[1]})
+    if db.transaction_list.count_documents({'username': user_data[1]}) > 0:
+        get_data = db.transaction_list.find({'username': user_data[1]})
 
         for data in get_data:
-            save_analyze_data = data
+            income_sum = income_sum + data['income']
+            spend_sum = spend_sum + data['spend']
 
-        if 'date_transaction' in save_analyze_data:
-            for transaction_analyze in save_analyze_data['date_transaction']:
-                income_sum = income_sum + transaction_analyze['income']
-                spend_sum = spend_sum + transaction_analyze['spend']
+            if data['type'] == "ค่าอาหาร":
+                food_spend = food_spend + data['spend']
+            elif data['type'] == "ค่าเดินทาง":
+                transport_spend = transport_spend + data['spend']
+            elif data['type'] == "ค่าใช้จ่ายทั่วไป":
+                normal_spend = normal_spend + data['spend']
+            elif data['type'] == "ค่าใช้จ่ายออนไลน์":
+                online_spend = online_spend + data['spend']
+            elif data['type'] == "ค่าใช้จ่ายของใช้ที่จำเป็น":
+                essential_spend = essential_spend + data['spend']
+            elif data['type'] == "รายรับทั่วไป":
+                normal_income = normal_income + data['income']
+            elif data['type'] == "รายรับเงินเดือน":
+                salary_income = salary_income + data['income']
 
-                if transaction_analyze['type'] == "ค่าอาหาร":
-                    food_spend = food_spend + transaction_analyze['spend']
-                elif transaction_analyze['type'] == "ค่าเดินทาง":
-                    transport_spend = transport_spend + transaction_analyze['spend']
-                elif transaction_analyze['type'] == "ค่าใช้จ่ายทั่วไป":
-                    normal_spend = normal_spend + transaction_analyze['spend']
-                elif transaction_analyze['type'] == "ค่าใช้จ่ายออนไลน์":
-                    online_spend = online_spend + transaction_analyze['spend']
-                elif transaction_analyze['type'] == "ค่าใช้จ่ายของใช้ที่จำเป็น":
-                    essential_spend = essential_spend + transaction_analyze['spend']
-                elif transaction_analyze['type'] == "รายรับทั่วไป":
-                    normal_income = normal_income + transaction_analyze['income']
-                elif transaction_analyze['type'] == "รายรับเงินเดือน":
-                    salary_income = salary_income + transaction_analyze['income']
-        else:
-            print("This user not have transaction.")
         print("load data for analyze ==> Calculate Percent...")
         if spend_sum == 0:
             normal_pt_spend = 0
@@ -58,6 +53,7 @@ def query_analyze(user_data):
             transport_pt_spend = round((transport_spend * 100) / spend_sum, 2)
             online_pt_spend = round((online_spend * 100) / spend_sum, 2)
             food_pt_spend = round((food_spend * 100) / spend_sum, 2)
+            
         if income_sum == 0:
             normal_pt_income = 0
             salary_pt_income = 0
@@ -95,8 +91,32 @@ def query_analyze(user_data):
         print("load data for analyze ==> success")
 
     else:
-        data_analyze.append("FAIL")
-        print("load limit value ==> Error")
+        print("This user not have transaction.")
+        normal_pt_spend = 0
+        essential_pt_spend = 0
+        transport_pt_spend = 0
+        online_pt_spend = 0
+        food_pt_spend = 0
+        normal_pt_income = 0
+        salary_pt_income = 0
+        data_analyze = {'income_sum': income_sum,
+                        'spend_sum': spend_sum,
+                        'food_spend': food_spend,
+                        'transport_spend': transport_spend,
+                        'normal_spend': normal_spend,
+                        'online_spend': online_spend,
+                        'essential_spend': essential_spend,
+                        'normal_income': normal_income,
+                        'salary_income': salary_income,
+                        'food_spend_pt': food_pt_spend,
+                        'transport_spend_pt': transport_pt_spend,
+                        'normal_spend_pt': normal_pt_spend,
+                        'online_spend_pt': online_pt_spend,
+                        'essential_spend_pt': essential_pt_spend,
+                        'normal_income_pt': normal_pt_income,
+                        'salary_income_pt': salary_pt_income
+                        }
+        print("load data for analyze ==> success")
 
     print("-"*30)
     return (data_analyze)
@@ -104,7 +124,8 @@ def query_analyze(user_data):
 
 def findDataByDay(user_data, datestart, dateend):
     print("load data for analyze by Day ==> wait...")
-    data_analyze = []
+    datestart_c = datetime.datetime.strptime(datestart, '%d-%b-%Y')
+    dateend_c = datetime.datetime.strptime(dateend, '%d-%b-%Y')
 
     normal_spend = 0
     essential_spend = 0
@@ -117,40 +138,31 @@ def findDataByDay(user_data, datestart, dateend):
     income_sum = 0
     spend_sum = 0
     db = connect_db.connectMongoDB()
-    if db.userlist.count_documents({'username': user_data[1]}) == 1:
+    if db.transaction_list.count_documents({'username': user_data[1]}) > 0:
 
-        get_data = db.userlist.find({'username': user_data[1]})
+        get_data = db.transaction_list.find({'username': user_data[1]})
 
         for data in get_data:
-            find_analyze_data = data
 
-        datestart_c = datetime.datetime.strptime(datestart, '%d-%b-%Y')
-        dateend_c = datetime.datetime.strptime(dateend, '%d-%b-%Y')
-        print("{} - {}".format(datestart_c,dateend_c))
-        if 'date_transaction' in find_analyze_data:
-            for transaction_analyze in find_analyze_data['date_transaction']:
-                data_date_c = datetime.datetime.strptime(transaction_analyze['date'], '%d-%b-%Y')
-                if datestart_c <= data_date_c <= dateend_c:
-                    income_sum = income_sum + transaction_analyze['income']
-                    spend_sum = spend_sum + transaction_analyze['spend']
+            data_date_c = datetime.datetime.strptime(data['date'], '%d-%b-%Y')
+            if datestart_c <= data_date_c <= dateend_c:
+                income_sum = income_sum + data['income']
+                spend_sum = spend_sum + data['spend']
 
-                    if transaction_analyze['type'] == "ค่าอาหาร":
-                        food_spend = food_spend + transaction_analyze['spend']
-                    elif transaction_analyze['type'] == "ค่าเดินทาง":
-                        transport_spend = transport_spend + transaction_analyze['spend']
-                    elif transaction_analyze['type'] == "ค่าใช้จ่ายทั่วไป":
-                        normal_spend = normal_spend + transaction_analyze['spend']
-                    elif transaction_analyze['type'] == "ค่าใช้จ่ายออนไลน์":
-                        online_spend = online_spend + transaction_analyze['spend']
-                    elif transaction_analyze['type'] == "ค่าใช้จ่ายของใช้ที่จำเป็น":
-                        essential_spend = essential_spend + transaction_analyze['spend']
-                    elif transaction_analyze['type'] == "รายรับทั่วไป":
-                        normal_income = normal_income + transaction_analyze['income']
-                    elif transaction_analyze['type'] == "รายรับเงินเดือน":
-                        salary_income = salary_income + transaction_analyze['income']
-
-        else:
-            print("This user not have transaction.")
+                if data['type'] == "ค่าอาหาร":
+                    food_spend = food_spend + data['spend']
+                elif data['type'] == "ค่าเดินทาง":
+                    transport_spend = transport_spend + data['spend']
+                elif data['type'] == "ค่าใช้จ่ายทั่วไป":
+                    normal_spend = normal_spend + data['spend']
+                elif data['type'] == "ค่าใช้จ่ายออนไลน์":
+                    online_spend = online_spend + data['spend']
+                elif data['type'] == "ค่าใช้จ่ายของใช้ที่จำเป็น":
+                    essential_spend = essential_spend + data['spend']
+                elif data['type'] == "รายรับทั่วไป":
+                    normal_income = normal_income + data['income']
+                elif data['type'] == "รายรับเงินเดือน":
+                    salary_income = salary_income + data['income']
 
         print("load data for analyze ==> Calculate Percent...")
         if spend_sum == 0:
@@ -202,7 +214,31 @@ def findDataByDay(user_data, datestart, dateend):
         print("load data for analyze ==> success")
 
     else:
-        data_analyze.append("FAIL")
-        print("load limit value ==> Error")
+        print("This user not have transaction.")
+        normal_pt_spend = 0
+        essential_pt_spend = 0
+        transport_pt_spend = 0
+        online_pt_spend = 0
+        food_pt_spend = 0
+        normal_pt_income = 0
+        salary_pt_income = 0
+        data_analyze = {'income_sum': income_sum,
+                        'spend_sum': spend_sum,
+                        'food_spend': food_spend,
+                        'transport_spend': transport_spend,
+                        'normal_spend': normal_spend,
+                        'online_spend': online_spend,
+                        'essential_spend': essential_spend,
+                        'normal_income': normal_income,
+                        'salary_income': salary_income,
+                        'food_spend_pt': food_pt_spend,
+                        'transport_spend_pt': transport_pt_spend,
+                        'normal_spend_pt': normal_pt_spend,
+                        'online_spend_pt': online_pt_spend,
+                        'essential_spend_pt': essential_pt_spend,
+                        'normal_income_pt': normal_pt_income,
+                        'salary_income_pt': salary_pt_income
+                        }
+        print("load data for analyze ==> success")
     print("-" * 30)
     return (data_analyze)

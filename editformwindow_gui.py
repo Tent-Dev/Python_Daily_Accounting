@@ -225,7 +225,8 @@ class EditForm_Ui(object):
                        "desc": desc_Transaction,
                        "income": income_Transaction_float,
                        "spend": spend_Transaction_float,
-                       "type": type_Transaction
+                       "type": type_Transaction,
+                       "_id": self.old_data['_id']
                        }
 
         dataLogin = checkEditLedger(datatoinput, self.user_data, self.old_data)

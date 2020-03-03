@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from editformwindow_gui import EditForm_Ui
+from my_service.alert import questionDialog
 from my_service.check_editledger import query_table
 
 from functools import partial
@@ -152,7 +153,7 @@ class Edit_Ui(object):
             self.query_table.setCellWidget(row_number, 5, self.btn_edit)
 
             self.btn_delete = QtWidgets.QPushButton('Delete')
-            # self.btn_edit.clicked.connect(self.handleButtonClicked)
+            self.btn_delete.clicked.connect(partial(self.linktoDelete, row_data_table))
             self.query_table.setCellWidget(row_number, 6, self.btn_delete)
 
             self.query_table.item(row_number, 2).setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -172,3 +173,7 @@ class Edit_Ui(object):
         self.ui = EditForm_Ui()
         self.ui.EditForm_setupUi(self.window, self.user_data, row_data_table)
         self.window.show()
+
+    def linktoDelete(self, row_data_table):
+        print('Confirm to delete {}'.format(row_data_table['_id']))
+        questionDialog(self,'Confirm Delete','Do you want to Delete?', row_data_table['_id'])

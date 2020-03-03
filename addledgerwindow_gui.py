@@ -220,7 +220,8 @@ class AddLedgerUi(object):
         spend_Transaction_float = float(spend_Transaction)
         type_Transaction = self.type_field.currentText()
 
-        datatoinput = {"date": date_Transaction,
+        datatoinput = {"username": self.user_data[1],
+                       "date": date_Transaction,
                        "desc": desc_Transaction,
                        "income": income_Transaction_float,
                        "spend": spend_Transaction_float,
@@ -232,7 +233,7 @@ class AddLedgerUi(object):
         # if datatoinput['spend'] == "":
         #     datatoinput.update({'spend': 0})
 
-        dataLogin = checkAddLedger(datatoinput, self.user_data)
+        dataLogin = checkAddLedger(datatoinput)
         if(dataLogin):
             self.desc_field.clear()
             self.income_field.setText("0")

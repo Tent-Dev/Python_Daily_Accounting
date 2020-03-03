@@ -17,53 +17,47 @@ def checkLogin(datainput):
     return (datalogin)
 
 def query_data(user_data):
-    print("load user data ==> wait...")
+    print("load user data {} ==> wait...".format(user_data[1]))
     data_transaction = []
     income_sum = 0
     spend_sum = 0
     db = connect_db.connectMongoDB()
-    if db.userlist.count_documents({'username': user_data[1]}) == 1:
-        get_data = db.userlist.find({'username': user_data[1]})
+    if db.transaction_list.count_documents({'username': user_data[1]}) > 0:
+        get_data = db.transaction_list.find({'username': user_data[1]})
 
         for data in get_data:
+            print(data)
             transaction_data = data
-        if 'date_transaction' not in transaction_data:
-            print("This user not have transaction data.")
-        else:
-            for transaction in transaction_data['date_transaction']:
-                income_sum = income_sum+transaction['income']
-                spend_sum = spend_sum + transaction['spend']
-            print("Sum income ==> {} Bath.".format(income_sum))
-            print("Sum spend ==> {} Bath.".format(spend_sum))
-            print("load user data ==> success")
-            print('-' * 30)
+
+            income_sum = income_sum+transaction_data['income']
+            spend_sum = spend_sum + transaction_data['spend']
+        print("Sum income ==> {} Bath.".format(income_sum))
+        print("Sum spend ==> {} Bath.".format(spend_sum))
+        print("load user data ==> success")
+        print('-' * 30)
 
         data_transaction = {'income_sum': income_sum, 'spend_sum':spend_sum}
 
-
     else:
-        data_transaction.append("FAIL")
-        print("load limit value ==> Error")
+        print("This user not have transaction data.")
+        data_transaction = {'income_sum': income_sum, 'spend_sum': spend_sum}
+
     return (data_transaction)
 
 def query_table(user_data):
     print("Load Table ==> wait...")
     data_table = []
     db = connect_db.connectMongoDB()
-    if db.userlist.count_documents({'username': user_data[1]}) == 1:
-        get_data = db.userlist.find({'username': user_data[1]})
+    if db.transaction_list.count_documents({'username': user_data[1]}) > 0:
+        get_data = db.transaction_list.find({'username': user_data[1]})
 
         for data in get_data:
-            transaction_data = data
-        if 'date_transaction' not in transaction_data:
-            print("This user not have transaction data.")
-        else:
-            for transaction in transaction_data['date_transaction']:
-                data_table.append(transaction)
-            print(data_table)
-            print("Load Table ==> success")
+            data_table.append(data)
+
+        print(data_table)
+        print("Load Table ==> success")
 
     else:
-        data_table.append("FAIL")
-        print("Load Table ==> Error")
+        print("This user not have transaction data.")
+
     return (data_table)
