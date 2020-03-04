@@ -139,6 +139,7 @@ class Edit_Ui(object):
         self.find_btn.setText(_translate("MainWindow", "ค้นหา"))
         
     def loadTable(self):
+        self.query_table.setRowCount(0)
         all_data_table = query_table(self.user_data,self.date_field.text())
         print("Prepare to show data on table ==> wait...")
         for row_number,row_data_table in enumerate(all_data_table):
