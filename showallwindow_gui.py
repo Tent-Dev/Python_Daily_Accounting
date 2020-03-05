@@ -13,7 +13,7 @@ from my_service.check_showall import query_table, query_tableByDay
 
 
 class ShowAll_UI(object):
-    def ShowAll_setupUi(self, MainWindow, user_data):
+    def ShowAll_setupUi(self, MainWindow, user_data, back):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -101,6 +101,8 @@ class ShowAll_UI(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.thiswindow = MainWindow
+        self.back = back
 
         self.showall_table.setColumnCount(5)
         # self.showall_table.setBackground(QtGui.QColor(255, 0, 0))
@@ -133,6 +135,7 @@ class ShowAll_UI(object):
 
         self.find_btn.clicked.connect(self.loadTableByDay)
         self.all_btn.clicked.connect(self.loadTable)
+        self.to_summary_btn.clicked.connect(self.back_MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -147,10 +150,12 @@ class ShowAll_UI(object):
         self.find_btn.setText(_translate("MainWindow", "ค้นหา"))
 
     def loadTable(self):
+        self.showall_table.setRowCount(0)
         self.startDate_field.setDate(QtCore.QDate(2020, 1, 1))
         all_data_table = query_table(self.user_data)
+        all_data_table_sorted = sorted(all_data_table, key=lambda k: k['date'])
         print("Prepare to show data on table ==> wait...")
-        for row_number,row_data_table in enumerate(all_data_table):
+        for row_number,row_data_table in enumerate(all_data_table_sorted):
             self.showall_table.insertRow(row_number)
             self.showall_table.setItem(row_number, 0, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['date']))))
             self.showall_table.setItem(row_number, 1, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['desc']))))
@@ -173,8 +178,9 @@ class ShowAll_UI(object):
         start_date = self.startDate_field.text()
         end_date = self.endstartDate_field.text()
         all_data_table = query_tableByDay(self.user_data, start_date, end_date)
+        all_data_table_sorted = sorted(all_data_table, key=lambda k: k['date'])
         print("Prepare to show data on table ==> wait...")
-        for row_number,row_data_table in enumerate(all_data_table):
+        for row_number,row_data_table in enumerate(all_data_table_sorted):
             self.showall_table.insertRow(row_number)
             self.showall_table.setItem(row_number, 0, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['date']))))
             self.showall_table.setItem(row_number, 1, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['desc']))))
@@ -191,3 +197,7 @@ class ShowAll_UI(object):
         self.showall_table.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers) #set Read only Table
         print("Prepare to show data on table ==> success")
         print('-'*30)
+
+    def back_MainWindow(self):
+        self.back.show()
+        self.thiswindow.hide()

@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtWidgets import QSizePolicy, QTableWidgetItem, QTableWidget, QApplication
 
-from addledgerwindow_gui import AddLedgerUi
+from addledgerwindow_gui import *
 from analyzewindow_gui import Analyze_UI
 from editlimitwindow_gui import editLimit_Ui
 from editwindow_gui import Edit_Ui
@@ -126,6 +126,37 @@ class SummaryUi(object):
         font.setWeight(50)
         self.editLimit_btn.setFont(font)
         self.editLimit_btn.setObjectName("editLimit_btn")
+        self.update_table_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.update_table_btn.setGeometry(QtCore.QRect(30, 510, 121, 41))
+        font = QtGui.QFont()
+        font.setFamily("Sukhumvit Set")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setWeight(50)
+        self.update_table_btn.setFont(font)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("Images/sync-alt-solid.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.update_table_btn.setIcon(icon)
+        self.update_table_btn.setObjectName("update_table_btn")
+        self.limit_alert_label = QtWidgets.QLabel(self.centralwidget)
+        self.limit_alert_label.setGeometry(QtCore.QRect(350, 520, 191, 21))
+        font = QtGui.QFont()
+        font.setFamily("Sukhumvit Set")
+        font.setPointSize(13)
+        font.setBold(True)
+        font.setWeight(75)
+        self.limit_alert_label.setFont(font)
+        self.limit_alert_label.setScaledContents(False)
+        self.limit_alert_label.setObjectName("limit_alert_label")
+        self.limit_alert_label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.limit_alert_label_2.setGeometry(QtCore.QRect(550, 520, 81, 21))
+        font = QtGui.QFont()
+        font.setFamily("Sukhumvit Set")
+        font.setPointSize(13)
+        font.setBold(True)
+        font.setWeight(75)
+        self.limit_alert_label_2.setFont(font)
+        self.limit_alert_label_2.setObjectName("limit_alert_label_2")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
@@ -137,9 +168,11 @@ class SummaryUi(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.thiswindow = MainWindow  # Set variable to this window
 
         self.income_label.setStyleSheet('color: green')
         self.spend_label.setStyleSheet('color: red')
+        self.limit_alert_label.setStyleSheet('color: orange')
 
         self.summary_table.setColumnCount(5)
         # self.summary_table.setBackground(QtGui.QColor(255, 0, 0))
@@ -167,9 +200,6 @@ class SummaryUi(object):
         self.user_data = user_data
 
         #query
-        user_query_data = query_data(user_data)
-        self.income_label.setText(str(user_query_data['income_sum']))
-        self.spend_label.setText(str(user_query_data['spend_sum']))
         self.loadTable()
 
         #setText area
@@ -181,6 +211,7 @@ class SummaryUi(object):
         self.analyze_btn.clicked.connect(self.linktoanalyze)
         self.seeAll_btn.clicked.connect(self.linktoshowall)
         self.editLedger_btn.clicked.connect(self.linktoedit)
+        self.update_table_btn.clicked.connect(self.loadTable)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -195,41 +226,51 @@ class SummaryUi(object):
         self.analyze_btn.setText(_translate("MainWindow", "วิเคราะห์"))
         self.seeAll_btn.setText(_translate("MainWindow", "ดูรายการทั้งหมด"))
         self.editLimit_btn.setText(_translate("MainWindow", "ควบคุมวงเงิน"))
+        self.update_table_btn.setText(_translate("MainWindow", "อัพเดทข้อมูล"))
+        self.limit_alert_label.setText(_translate("MainWindow", "เหลือเงินที่ใช้ได้ตามวงเงิน :"))
+        self.limit_alert_label_2.setText(_translate("MainWindow", "$current"))
 
     def linktoaddLedger(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = AddLedgerUi()
-        self.ui.AddLedgerSetupUi(self.window, self.user_data)
+        self.ui.AddLedgerSetupUi(self.window, self.user_data, self.thiswindow)
         self.window.show()
+        self.thiswindow.hide()
 
     def linktoeditlimit(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = editLimit_Ui()
-        self.ui.editLimit_setupUi(self.window, self.user_data)
+        self.ui.editLimit_setupUi(self.window, self.user_data, self.thiswindow)
         self.window.show()
+        self.thiswindow.hide()
 
     def linktoanalyze(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Analyze_UI()
-        self.ui.Analyze_setupUI(self.window, self.user_data)
+        self.ui.Analyze_setupUI(self.window, self.user_data, self.thiswindow)
         self.window.show()
+        self.thiswindow.hide()
 
     def linktoshowall(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = ShowAll_UI()
-        self.ui.ShowAll_setupUi(self.window, self.user_data)
+        self.ui.ShowAll_setupUi(self.window, self.user_data, self.thiswindow)
         self.window.show()
+        self.thiswindow.hide()
 
     def linktoedit(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Edit_Ui()
-        self.ui.Edit_setupUi(self.window, self.user_data)
+        self.ui.Edit_setupUi(self.window, self.user_data, self.thiswindow)
         self.window.show()
+        self.thiswindow.hide()
 
     def loadTable(self):
+        self.summary_table.setRowCount(0)
         all_data_table = query_table(self.user_data)
+        all_data_table_sorted = sorted(all_data_table, key=lambda k: k['date'])
         print("Prepare to show data on table ==> wait...")
-        for row_number,row_data_table in enumerate(all_data_table):
+        for row_number,row_data_table in enumerate(all_data_table_sorted):
             self.summary_table.insertRow(row_number)
             self.summary_table.setItem(row_number, 0, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['date']))))
             self.summary_table.setItem(row_number, 1, QtWidgets.QTableWidgetItem(str("{}".format(row_data_table['desc']))))
@@ -244,8 +285,43 @@ class SummaryUi(object):
                 self.summary_table.item(row_number, 3).setBackground(QtGui.QColor(255, 150, 142))
 
         self.summary_table.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers) #set Read only Table
+
+        user_query_data = query_data(self.user_data)
+        print(user_query_data)
+        self.income_label.setText('{} ฿'.format(str(user_query_data['income_sum'])))
+        self.spend_label.setText('{} ฿'.format(str(user_query_data['spend_sum'])))
+        cal_limit = user_query_data['limit_value'] - user_query_data['spend_sum']
+        self.limit_alert_label_2.setText(str(cal_limit))
+        if cal_limit >= 0:
+            self.limit_alert_label_2.setStyleSheet('color: green')
+        else:
+            self.limit_alert_label_2.setStyleSheet('color: red')
         print("Prepare to show data on table ==> success")
         print('-'*30)
+
+class Firstwindow(QtWidgets.QMainWindow, SummaryUi):
+    def __init__(self, parent=None):
+        super(Firstwindow, self).__init__(parent)
+        self.setupSummaryUi(self)
+        self.addLedger_btn.clicked.connect(self.hide)
+
+
+class Secondwindow(QtWidgets.QDialog, AddLedgerUi):
+    def __init__(self, parent=None):
+        super(Secondwindow, self).__init__(parent)
+        self.AddLedgerSetupUi(self)
+        self.to_summary_btn.clicked.connect(self.hide)
+
+
+class Manager:
+    def __init__(self):
+        self.first = Firstwindow()
+        self.second = Secondwindow()
+
+        self.first.addLedger_btn.clicked.connect(self.second.show)
+        self.second.to_summary_btn.clicked.connect(self.first.show)
+
+        self.first.show()
 
 if __name__ == "__main__":
     import sys

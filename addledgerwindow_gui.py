@@ -10,11 +10,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QDate
 
+from my_service.alert import errorWarShow
 from my_service.check_addledger import checkAddLedger
+#from summarywindow_gui import SummaryUi
+from my_service.check_register import check_inputNormal
+from summarywindow_gui import *
 
 
 class AddLedgerUi(object):
-    def AddLedgerSetupUi(self, MainWindow, user_data):
+    def AddLedgerSetupUi(self, MainWindow, user_data, back):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -177,6 +181,8 @@ class AddLedgerUi(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.thiswindow = MainWindow
+        self.back = back
 
         self.user_data = user_data
         self.income_field.setText("0")
@@ -184,6 +190,7 @@ class AddLedgerUi(object):
 
         self.add_btn.clicked.connect(self.linktoAdd_Process)
         self.reset_btn.clicked.connect(self.reset_form_btn)
+        self.to_summary_btn.clicked.connect(self.back_MainWindow)
 
 
     def retranslateUi(self, MainWindow):
@@ -220,26 +227,29 @@ class AddLedgerUi(object):
         spend_Transaction_float = float(spend_Transaction)
         type_Transaction = self.type_field.currentText()
 
-        datatoinput = {"username": self.user_data[1],
-                       "date": date_Transaction,
-                       "desc": desc_Transaction,
-                       "income": income_Transaction_float,
-                       "spend": spend_Transaction_float,
-                       "type": type_Transaction
-                       }
-        #Check null value and set to 0 in income and spend
-        # if datatoinput['income'] == "":
-        #     datatoinput.update({'income': 0})
-        # if datatoinput['spend'] == "":
-        #     datatoinput.update({'spend': 0})
+        list_check = [date_Transaction, desc_Transaction, type_Transaction]  # List for send to check null value function
 
-        dataLogin = checkAddLedger(datatoinput)
-        if(dataLogin):
-            self.desc_field.clear()
-            self.income_field.setText("0")
-            self.spend_field.setText("0")
-            self.type_field.currentText()
-            self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
+        if check_inputNormal(list_check):
+            if income_Transaction != '' or spend_Transaction != '':
+                datatoinput = {"username": self.user_data[1],
+                               "date": date_Transaction,
+                               "desc": desc_Transaction,
+                               "income": income_Transaction_float,
+                               "spend": spend_Transaction_float,
+                               "type": type_Transaction
+                               }
+
+                dataLogin = checkAddLedger(datatoinput)
+                if(dataLogin):
+                    self.desc_field.clear()
+                    self.income_field.setText("0")
+                    self.spend_field.setText("0")
+                    self.type_field.currentText()
+                    self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
+            else:
+                errorWarShow(self, 'Error!!!', 'Please fill income or spend value')
+        else:
+            errorWarShow(self, 'Error!!!', 'Please fill description')
 
     def reset_form_btn(self):
         self.desc_field.clear()
@@ -247,6 +257,10 @@ class AddLedgerUi(object):
         self.spend_field.setText("0")
         self.type_field.currentText()
         self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
+
+    def back_MainWindow(self):
+        self.back.show()
+        self.thiswindow.hide()
 
 if __name__ == "__main__":
     import sys

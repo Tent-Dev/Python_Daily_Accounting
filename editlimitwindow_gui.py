@@ -16,7 +16,7 @@ from my_service.check_register import check_inputNormal
 
 
 class editLimit_Ui(object):
-    def editLimit_setupUi(self, MainWindow, user_data):
+    def editLimit_setupUi(self, MainWindow, user_data, back):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -121,11 +121,15 @@ class editLimit_Ui(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.thiswindow = MainWindow
+        self.back = back
 
         self.user_data = user_data
 
         # btn area
         self.saveLimit_btn.clicked.connect(self.linktosavelimit)
+        self.to_summary_btn.clicked.connect(self.back_MainWindow)
+
         query_result = query_limitValue(user_data)
         print("query ==> {}".format(query_result))
         if query_result[0] == "PASS":
@@ -168,6 +172,10 @@ class editLimit_Ui(object):
             print("")
             errorWarShow(self,'Warning!!!', 'Please fill Limit value')
             self.limit_value_field.clear()
+
+    def back_MainWindow(self):
+        self.back.show()
+        self.thiswindow.hide()
 
 if __name__ == "__main__":
     import sys

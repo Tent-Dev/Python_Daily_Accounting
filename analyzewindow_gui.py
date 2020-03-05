@@ -13,7 +13,7 @@ from my_service.check_analyze import query_analyze, findDataByDay
 
 
 class Analyze_UI(object):
-    def Analyze_setupUI(self, MainWindow, user_data):
+    def Analyze_setupUI(self, MainWindow, user_data, back):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -378,6 +378,8 @@ class Analyze_UI(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.thiswindow = MainWindow
+        self.back = back
 
         self.endDate_field.setDateTime(QtCore.QDateTime.currentDateTime())
 
@@ -389,6 +391,7 @@ class Analyze_UI(object):
         # btn area
         self.find_btn.clicked.connect(self.findByDate)
         self.all_btn.clicked.connect(self.findAll)
+        self.to_summary_btn.clicked.connect(self.back_MainWindow)
 
         self.income_pay_label.setText("{} ฿".format(str(user_query_data['income_sum'])))
         self.sum_pay_label.setText("{} ฿".format(str(user_query_data['spend_sum'])))
@@ -597,6 +600,10 @@ class Analyze_UI(object):
             self.essential_spend_pt_label.setStyleSheet('color: red')
         else:
             self.essential_spend_pt_label.setStyleSheet('color: green')
+
+    def back_MainWindow(self):
+        self.back.show()
+        self.thiswindow.hide()
 
 
 if __name__ == "__main__":

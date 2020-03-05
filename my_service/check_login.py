@@ -31,20 +31,25 @@ def query_data(user_data):
 
             income_sum = income_sum+transaction_data['income']
             spend_sum = spend_sum + transaction_data['spend']
+
+        get_Userdata = db.userlist.find({'username': user_data[1]})
+        for data in get_Userdata:
+            user_data_result = data
+
         print("Sum income ==> {} Bath.".format(income_sum))
         print("Sum spend ==> {} Bath.".format(spend_sum))
         print("load user data ==> success")
         print('-' * 30)
-
-        data_transaction = {'income_sum': income_sum, 'spend_sum':spend_sum}
+        data_transaction = {'income_sum': income_sum, 'spend_sum': spend_sum, 'limit_value': user_data_result['limit_value_temp'][-1]['limit_value']}
 
     else:
         print("This user not have transaction data.")
-        data_transaction = {'income_sum': income_sum, 'spend_sum': spend_sum}
+        data_transaction = {'income_sum': income_sum, 'spend_sum': spend_sum, 'limit_value': 0}
 
     return (data_transaction)
 
 def query_table(user_data):
+
     print("Load Table ==> wait...")
     data_table = []
     db = connect_db.connectMongoDB()

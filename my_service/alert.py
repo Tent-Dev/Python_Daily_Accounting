@@ -37,5 +37,4 @@ def questionDialog(self, title, message, id):
     CriBox.setText("{}\n{}".format(message, id))
     CriBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
     CriBox.accepted.connect(lambda: checkDeleteLedger(id))
-
     CriBox.exec_()

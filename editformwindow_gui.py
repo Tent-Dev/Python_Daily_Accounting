@@ -180,6 +180,7 @@ class EditForm_Ui(object):
         self.old_data = row_data_table
 
         self.add_btn.clicked.connect(self.linktoEdit_Process)
+        self.reset_btn.clicked.connect(self.resetData)
 
         self.date_field.setDateTime(QtCore.QDateTime.fromString(row_data_table['date'], 'dd-MMM-yyyy'))
         self.desc_field.setPlainText(row_data_table['desc'])
@@ -236,6 +237,13 @@ class EditForm_Ui(object):
             self.spend_field.setText("0")
             self.type_field.currentText()
             self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
+
+    def resetData(self):
+        self.date_field.setDateTime(QtCore.QDateTime.fromString(self.old_data['date'], 'dd-MMM-yyyy'))
+        self.desc_field.setPlainText(self.old_data['desc'])
+        self.income_field.setText(str(self.old_data['income']))
+        self.spend_field.setText(str(self.old_data['spend']))
+        self.type_field.setCurrentText(self.old_data['type'])
 
 if __name__ == "__main__":
     import sys

@@ -17,7 +17,7 @@ from functools import partial
 
 
 class Edit_Ui(object):
-    def Edit_setupUi(self, MainWindow, user_data):
+    def Edit_setupUi(self, MainWindow, user_data, back):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -89,6 +89,8 @@ class Edit_Ui(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.thiswindow = MainWindow
+        self.back = back
         self.date_field.setDateTime(QtCore.QDateTime.currentDateTime())
 
         self.query_table.setColumnCount(7)
@@ -127,6 +129,7 @@ class Edit_Ui(object):
         self.loadTable()
 
         self.find_btn.clicked.connect(self.loadTable)
+        self.to_summary_btn_2.clicked.connect(self.back_MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -178,3 +181,8 @@ class Edit_Ui(object):
     def linktoDelete(self, row_data_table):
         print('Confirm to delete {}'.format(row_data_table['_id']))
         questionDialog(self,'Confirm Delete','Do you want to Delete?', row_data_table['_id'])
+        self.loadTable()
+
+    def back_MainWindow(self):
+        self.back.show()
+        self.thiswindow.hide()
