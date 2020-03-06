@@ -86,7 +86,7 @@ class AddLedgerUi(object):
         self.label_5.setFont(font)
         self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_5.setObjectName("label_5")
-        self.income_field = QtWidgets.QTextEdit(self.centralwidget)
+        self.income_field = QtWidgets.QLineEdit(self.centralwidget)
         self.income_field.setGeometry(QtCore.QRect(140, 300, 221, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -102,7 +102,7 @@ class AddLedgerUi(object):
         self.label_6.setFont(font)
         self.label_6.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_6.setObjectName("label_6")
-        self.spend_field = QtWidgets.QTextEdit(self.centralwidget)
+        self.spend_field = QtWidgets.QLineEdit(self.centralwidget)
         self.spend_field.setGeometry(QtCore.QRect(140, 360, 221, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -221,16 +221,20 @@ class AddLedgerUi(object):
 
         date_Transaction = self.date_field.text()
         desc_Transaction = self.desc_field.toPlainText()
-        income_Transaction = self.income_field.toPlainText()
+        income_Transaction = self.income_field.text()
         income_Transaction_float = float(income_Transaction)
-        spend_Transaction = self.spend_field.toPlainText()
+        spend_Transaction = self.spend_field.text()
         spend_Transaction_float = float(spend_Transaction)
         type_Transaction = self.type_field.currentText()
 
-        list_check = [date_Transaction, desc_Transaction, type_Transaction]  # List for send to check null value function
+        if income_Transaction :
+            income_Transaction_float = 0
+        if spend_Transaction == '':
+            spend_Transaction_float = 0
 
+        list_check = [date_Transaction, desc_Transaction, type_Transaction]  # List for send to check null value function
         if check_inputNormal(list_check):
-            if income_Transaction != '' or spend_Transaction != '':
+            if income_Transaction_float != '' or spend_Transaction_float != '':
                 datatoinput = {"username": self.user_data[1],
                                "date": date_Transaction,
                                "desc": desc_Transaction,

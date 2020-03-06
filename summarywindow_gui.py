@@ -14,6 +14,7 @@ from addledgerwindow_gui import *
 from analyzewindow_gui import Analyze_UI
 from editlimitwindow_gui import editLimit_Ui
 from editwindow_gui import Edit_Ui
+from limitwindow_gui import limitmain_Ui
 from my_service.check_login import query_data, query_table
 from showallwindow_gui import ShowAll_UI
 
@@ -239,8 +240,8 @@ class SummaryUi(object):
 
     def linktoeditlimit(self):
         self.window = QtWidgets.QMainWindow()
-        self.ui = editLimit_Ui()
-        self.ui.editLimit_setupUi(self.window, self.user_data, self.thiswindow)
+        self.ui = limitmain_Ui()
+        self.ui.limitmain_setupUi(self.window, self.user_data, self.thiswindow)
         self.window.show()
         self.thiswindow.hide()
 
@@ -290,9 +291,12 @@ class SummaryUi(object):
         print(user_query_data)
         self.income_label.setText('{} ฿'.format(str(user_query_data['income_sum'])))
         self.spend_label.setText('{} ฿'.format(str(user_query_data['spend_sum'])))
-        cal_limit = user_query_data['limit_value'] - user_query_data['spend_sum']
+        if user_query_data['limit_value'] < user_query_data['spend_limit_month_sum']:
+            cal_limit = user_query_data['limit_value'] - user_query_data['spend_limit_month_sum']
+        else:
+            cal_limit = 0
         self.limit_alert_label_2.setText(str(cal_limit))
-        if cal_limit >= 0:
+        if cal_limit == 0:
             self.limit_alert_label_2.setStyleSheet('color: green')
         else:
             self.limit_alert_label_2.setStyleSheet('color: red')

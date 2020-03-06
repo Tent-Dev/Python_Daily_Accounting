@@ -155,7 +155,7 @@ class editLimit_Ui(object):
         print(list_check)
         if check_inputNormal(list_check):
             limit_value_float = float(limit_value)
-            today = datetime.date.today().strftime('%Y-%m-%d')
+            today = datetime.date.today().strftime('%d-%b-%Y')
 
             datatoinput = {'limit_value': limit_value_float,
                            'date_create': today

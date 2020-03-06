@@ -9,9 +9,14 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from editlimitwindow_gui import editLimit_Ui
+from historylimitwindow_gui import historyLimit_Ui
+from my_service.check_limitValue import query_limitValue, query_data
+import datetime
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+
+class limitmain_Ui(object):
+    def limitmain_setupUi(self, MainWindow, user_data, back):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -47,7 +52,7 @@ class Ui_MainWindow(object):
         self.monthlimit_label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.monthlimit_label.setObjectName("monthlimit_label")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(110, 150, 131, 31))
+        self.label_4.setGeometry(QtCore.QRect(100, 150, 131, 31))
         font = QtGui.QFont()
         font.setFamily("Sukhumvit Set")
         font.setPointSize(14)
@@ -77,7 +82,7 @@ class Ui_MainWindow(object):
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
         self.label_6.setObjectName("label_6")
         self.limit_value_label = QtWidgets.QLabel(self.centralwidget)
-        self.limit_value_label.setGeometry(QtCore.QRect(30, 190, 191, 81))
+        self.limit_value_label.setGeometry(QtCore.QRect(70, 190, 191, 81))
         font = QtGui.QFont()
         font.setFamily("Sukhumvit Set")
         font.setPointSize(28)
@@ -86,28 +91,8 @@ class Ui_MainWindow(object):
         self.limit_value_label.setFont(font)
         self.limit_value_label.setAlignment(QtCore.Qt.AlignCenter)
         self.limit_value_label.setObjectName("limit_value_label")
-        self.label_8 = QtWidgets.QLabel(self.centralwidget)
-        self.label_8.setGeometry(QtCore.QRect(200, 190, 61, 81))
-        font = QtGui.QFont()
-        font.setFamily("Sukhumvit Set")
-        font.setPointSize(28)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_8.setFont(font)
-        self.label_8.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_8.setObjectName("label_8")
-        self.label_9 = QtWidgets.QLabel(self.centralwidget)
-        self.label_9.setGeometry(QtCore.QRect(450, 190, 61, 81))
-        font = QtGui.QFont()
-        font.setFamily("Sukhumvit Set")
-        font.setPointSize(28)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_9.setFont(font)
-        self.label_9.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_9.setObjectName("label_9")
         self.usedlimit_value_label = QtWidgets.QLabel(self.centralwidget)
-        self.usedlimit_value_label.setGeometry(QtCore.QRect(280, 190, 191, 81))
+        self.usedlimit_value_label.setGeometry(QtCore.QRect(320, 190, 191, 81))
         font = QtGui.QFont()
         font.setFamily("Sukhumvit Set")
         font.setPointSize(28)
@@ -116,18 +101,8 @@ class Ui_MainWindow(object):
         self.usedlimit_value_label.setFont(font)
         self.usedlimit_value_label.setAlignment(QtCore.Qt.AlignCenter)
         self.usedlimit_value_label.setObjectName("usedlimit_value_label")
-        self.label_11 = QtWidgets.QLabel(self.centralwidget)
-        self.label_11.setGeometry(QtCore.QRect(690, 190, 61, 81))
-        font = QtGui.QFont()
-        font.setFamily("Sukhumvit Set")
-        font.setPointSize(28)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_11.setFont(font)
-        self.label_11.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_11.setObjectName("label_11")
         self.overlimit_value_label = QtWidgets.QLabel(self.centralwidget)
-        self.overlimit_value_label.setGeometry(QtCore.QRect(520, 190, 191, 81))
+        self.overlimit_value_label.setGeometry(QtCore.QRect(560, 190, 191, 81))
         font = QtGui.QFont()
         font.setFamily("Sukhumvit Set")
         font.setPointSize(28)
@@ -175,7 +150,7 @@ class Ui_MainWindow(object):
         self.historylimit_btn.setObjectName("historylimit_btn")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -184,6 +159,35 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.thiswindow = MainWindow
+        self.back = back
+        self.user_data = user_data
+
+        self.to_summary_btn.clicked.connect(self.back_MainWindow)
+        self.editlimit_btn.clicked.connect(self.linktoeditlimit)
+        self.historylimit_btn.clicked.connect(self.linktohistoryLimit)
+
+        query_result = query_limitValue(user_data)
+        print("query ==> {}".format(query_result))
+        if query_result[0] == "PASS":
+            self.limit_value_label.setText(str(query_result[1]))
+
+        now = datetime.datetime.today().strftime('%b-%Y')
+
+        user_query_data = query_data(self.user_data, now)
+        if user_query_data['limit_value'] < user_query_data['spend_sum']:
+            cal_limit = user_query_data['limit_value'] - user_query_data['spend_sum']
+        else:
+            self.overlimit_value_label.setText(str(0))
+        self.overlimit_value_label.setText(str(cal_limit))
+        self.usedlimit_value_label.setText(str(user_query_data['spend_sum']))
+        self.monthlimit_label.setText(str(now))
+
+        if cal_limit >= 0:
+            self.overlimit_value_label.setStyleSheet('color: green')
+        else:
+            self.overlimit_value_label.setStyleSheet('color: red')
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -195,21 +199,26 @@ class Ui_MainWindow(object):
         self.label_5.setText(_translate("MainWindow", "ใช้ไปแล้ว"))
         self.label_6.setText(_translate("MainWindow", "ใช้เกิน"))
         self.limit_value_label.setText(_translate("MainWindow", "N/A"))
-        self.label_8.setText(_translate("MainWindow", "฿"))
-        self.label_9.setText(_translate("MainWindow", "฿"))
         self.usedlimit_value_label.setText(_translate("MainWindow", "N/A"))
-        self.label_11.setText(_translate("MainWindow", "฿"))
         self.overlimit_value_label.setText(_translate("MainWindow", "N/A"))
         self.to_summary_btn.setText(_translate("MainWindow", "กลับไปหน้าหลัก"))
         self.editlimit_btn.setText(_translate("MainWindow", "แก้ไขวงเงิน"))
         self.historylimit_btn.setText(_translate("MainWindow", "ดูประวัติวงเงิน"))
 
+    def back_MainWindow(self):
+        self.back.show()
+        self.thiswindow.hide()
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+    def linktoeditlimit(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = editLimit_Ui()
+        self.ui.editLimit_setupUi(self.window, self.user_data, self.thiswindow)
+        self.window.show()
+        self.thiswindow.hide()
+
+    def linktohistoryLimit(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = historyLimit_Ui()
+        self.ui.historyLimit_setupUi(self.window, self.user_data, self.thiswindow)
+        self.window.show()
+        self.thiswindow.hide()
