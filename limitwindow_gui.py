@@ -178,7 +178,8 @@ class limitmain_Ui(object):
         if user_query_data['limit_value'] < user_query_data['spend_sum']:
             cal_limit = user_query_data['limit_value'] - user_query_data['spend_sum']
         else:
-            self.overlimit_value_label.setText(str(0))
+            cal_limit = 0
+            self.overlimit_value_label.setText(str(cal_limit))
         self.overlimit_value_label.setText(str(cal_limit))
         self.usedlimit_value_label.setText(str(user_query_data['spend_sum']))
         self.monthlimit_label.setText(str(now))
